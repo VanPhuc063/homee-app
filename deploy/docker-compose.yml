@@ -1,0 +1,28 @@
+# Bản tham khảo — copy file này lên VPS tại /opt/homee-backend/docker-compose.yml
+# (đường dẫn phải khớp với `cd /opt/homee-backend` trong .github/workflows/deploy.yml).
+# VPS không bao giờ build từ Dockerfile, chỉ pull image này rồi restart.
+services:
+  db:
+    image: postgres:16
+    container_name: homee-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: homeee
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    image: ghcr.io/cris-the-dev/homee-backend:latest
+    container_name: homee-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"   # đổi cổng host nếu VPS đã có Nginx/Caddy reverse proxy trước
+    env_file:
+      - .env          # tạo tay trên VPS, KHÔNG commit vào git — xem backend/.env.example
+
+volumes:
+  db-data:

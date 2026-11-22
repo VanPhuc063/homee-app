@@ -1,0 +1,40 @@
+name: Setup Nginx + HTTPS cho bản web (chạy tay 1 lần)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: deploy/nginx-homee-web.conf
+          target: /tmp
+          strip_components: 1
+
+      - name: Enable site + certbot
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+            S=""; [ "$(id -u)" -ne 0 ] && S="sudo -n"
+            # Lần đầu: copy config. Lần sau certbot đã sửa file (thêm 443/SSL) — chỉ chèn gzip nếu chưa có.
+            if [ ! -f /etc/nginx/sites-available/homee-web ]; then $S cp /tmp/nginx-homee-web.conf /etc/nginx/sites-available/homee-web; fi
+            $S grep -q 'gzip on' /etc/nginx/sites-available/homee-web || $S sed -i 's#root /var/www/homee-web;#root /var/www/homee-web;\n    gzip on;\n    gzip_types application/javascript application/json text/css image/svg+xml;\n    gzip_min_length 1024;#' /etc/nginx/sites-available/homee-web
+            $S ln -sf /etc/nginx/sites-available/homee-web /etc/nginx/sites-enabled/homee-web
+            $S nginx -t
+            $S systemctl reload nginx
+            $S test -d /etc/letsencrypt/live/homee.cristhedev.com || $S certbot --nginx -d homee.cristhedev.com --non-interactive --agree-tos --redirect -m tien20001810@gmail.com
+            ls /var/www/homee-web | head

@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Homeee",
+    "slug": "homeee",
+    "version": "0.1.0",
+    "scheme": "homeee",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "vn.homeee.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Homeee cần quyền truy cập thư viện ảnh để bạn chọn ảnh vật tư/tiến độ thi công tải lên.",
+        "NSCameraUsageDescription": "Homeee cần quyền dùng camera để chụp ảnh vật tư/tiến độ thi công.",
+        "NSMicrophoneUsageDescription": "Homeee cần quyền dùng micro để quay video bằng chứng tiến độ thi công.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "vn.homeee.app",
+      "permissions": [
+        "NOTIFICATIONS"
+      ],
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "mode": "production"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./node_modules/@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Feather.ttf"
+          ]
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "apiUrl": "https://api.homee.cristhedev.com",
+      "googleClientId": "1067905195807-9eej57ql79h23hg35uka1sf0j4e3hatr.apps.googleusercontent.com",
+      "eas": {
+        "projectId": "a9f747e8-37a9-406e-b365-086511510eb1"
+      },
+      "router": {}
+    },
+    "owner": "cris_thedev",
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./public/icon-192.png"
+    }
+  }
+}

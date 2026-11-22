@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PlanChangeType" ADD VALUE 'IMPORT_SCHEDULE';

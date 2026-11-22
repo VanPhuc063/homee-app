@@ -1,0 +1,1197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectRole {
+  OWNER
+  MAIN_CONTRACTOR
+  SUB_CONTRACTOR
+  SUPERVISOR
+}
+
+/// Loại đội thợ — chỉ có ý nghĩa với ProjectMember.role = SUB_CONTRACTOR (thầu phụ đứng vai "đội
+/// trưởng" quản lý 1 đội theo Requirements v2.1 §4.5.3). Null = thầu phụ không gắn với 1 đội cụ
+/// thể (mời theo hạng mục như cũ, không dùng điểm danh/báo cáo đội).
+enum TeamType {
+  PHAN_THO
+  SON
+  THACH_CAO
+  DA
+  KINH_CAU_THANG
+  CUA_NHOM
+  KHAC
+}
+
+enum ProjectStatus {
+  DRAFT
+  PLANNING
+  ACTIVE
+  HANDOVER
+  DONE
+}
+
+/// 5 mô hình hợp đồng theo product team (2026-07-26, thay cho 3 loại cũ):
+/// - THO_VA_NHAN_CONG_HOAN_THIEN: phổ biến nhất — thầu trọn gói phần thô (vật tư + công) + chỉ
+///   nhân công phần hoàn thiện (chủ nhà tự mua vật tư hoàn thiện). Đổi tên từ THO_TRON_GOI cũ.
+/// - TRON_GOI_A_Z: thầu lo trọn gói từ đầu đến cuối, cả vật tư lẫn công cho thô lẫn hoàn thiện.
+/// - CAI_TAO: nhà cải tạo — sửa/hoàn thiện lại nhà đã có sẵn kết cấu, không cần hạng mục kết cấu thô.
+/// - CHUNG_CU: nhà chung cư — kết cấu toà nhà có sẵn, chỉ thi công phần hoàn thiện nội thất.
+/// - NHAN_CONG: chỉ thi công nhân công cho toàn bộ thô + hoàn thiện, chủ đầu tư tự mua mọi vật tư —
+///   KHÔNG cần cổng duyệt vật tư.
+/// CAI_TAO/CHUNG_CU bỏ qua hạng mục scope=KET_CAU_THO lúc tạo dự án/so sánh AI-import — xem
+/// `contract-scope.util.ts` (ProjectsService.create, getPlanOptions, ImportScheduleService).
+enum ContractType {
+  THO_VA_NHAN_CONG_HOAN_THIEN
+  TRON_GOI_A_Z
+  CAI_TAO
+  CHUNG_CU
+  NHAN_CONG
+}
+
+/// Phạm vi 1 hạng mục quy trình chuẩn — KET_CAU_THO (móng, cột/dầm/sàn/mái, bao che, vách hầm...)
+/// bị bỏ qua khi contractType là CAI_TAO/CHUNG_CU (kết cấu đã có sẵn); HOAN_THIEN (rough-in + hoàn
+/// thiện nội thất) luôn áp dụng cho mọi loại hợp đồng; THAO_DO (B-03, tháo dỡ hiện trạng) NGƯỢC
+/// LẠI với KET_CAU_THO — chỉ áp dụng khi contractType là CAI_TAO (nhà mới/CHUNG_CU không có gì để
+/// tháo dỡ). Xem `templatePhaseAppliesToContract`.
+enum PhaseScope {
+  KET_CAU_THO
+  HOAN_THIEN
+  THAO_DO
+}
+
+/// Trạng thái cổng duyệt vật tư — bắt buộc phải APPROVED thì mới được duyệt kế hoạch/bắt đầu thi
+/// công, áp dụng khi contractType khác NHAN_CONG (thầu là bên cung ứng vật tư).
+enum MaterialCheckStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+/// Trạng thái duyệt của TỪNG loại vật tư (MaterialCheckItem) — khác với MaterialCheckStatus vốn
+/// là trạng thái TỔNG của cả cổng duyệt. 1 item PENDING nghĩa là chưa được chủ nhà quyết định.
+enum MaterialItemStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PhaseStatus {
+  LOCKED
+  IN_PROGRESS
+  DONE
+}
+
+enum StepStatus {
+  LOCKED
+  OPEN
+  SUBMITTED
+  SUPERVISOR_APPROVED
+  APPROVED
+  REJECTED
+}
+
+/// Quan hệ phụ thuộc lịch CPM giữa 2 bước — khớp 2 kiểu quan hệ xuất hiện trong file tiến độ thật
+/// (Gantt export dạng MS Project): FS (Finish-to-Start, mặc định — bước sau chỉ bắt đầu khi bước
+/// trước xong) và FF (Finish-to-Finish — 2 bước phải kết thúc cùng lúc, VD "Thi công MEP kỹ thuật
+/// âm" phải xong cùng lúc với 1 bước khác chứ không phải sau nó). Không có SS (Start-to-Start) vì
+/// không xuất hiện trong file tham khảo.
+enum StepRelationType {
+  FS
+  FF
+}
+
+enum EvidenceType {
+  PHOTO
+  VIDEO
+}
+
+enum ApprovalLevel {
+  SUPERVISOR
+  OWNER
+}
+
+enum Decision {
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStageStatus {
+  LOCKED
+  ELIGIBLE
+  CONFIRMED_PAID
+}
+
+enum DefectStatus {
+  OPEN
+  FIXED
+  CLOSED
+}
+
+enum ProposalStatus {
+  PROPOSED
+  APPROVED
+  REJECTED
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+/// Loại thay đổi kế hoạch mà thầu chính/chủ nhà có thể đề xuất lên bên kia duyệt (xem
+/// PlanChangeRequest).
+enum PlanChangeType {
+  ADD_PHASE
+  REMOVE_PHASE
+  ADD_STEP
+  REMOVE_STEP
+  ADJUST_DURATION
+  REORDER_PHASES
+  /// Thầu chính import cả 1 file tiến độ (PDF/Excel) — AI parse thành cây hạng mục/bước mới, so
+  /// sánh với quy trình chuẩn hệ thống, chủ nhà duyệt 1 lần cho TOÀN BỘ thay vì từng dòng lẻ (xem
+  /// PlanChangeService.applyImportSchedule). Chỉ cho phép lúc PLANNING — xem ImportScheduleService.
+  IMPORT_SCHEDULE
+}
+
+model User {
+  id                    String                 @id @default(uuid())
+  /// Nullable — tài khoản đăng ký bằng email không có SĐT. Vẫn unique khi có giá trị (Postgres cho
+  /// nhiều NULL cùng tồn tại trong cột unique, không xung đột nhau).
+  phone                 String?                @unique
+  /// Nullable — tài khoản đăng ký bằng SĐT+OTP (luồng cũ) không có email. Đăng ký mới (email+mật
+  /// khẩu, theo mockup) bắt buộc có email+passwordHash; SĐT+OTP vẫn là lối vào thay thế, không bắt
+  /// buộc liên kết email.
+  email                 String?                @unique
+  passwordHash          String?
+  name                  String
+  avatarUrl             String?
+  otpCode               String?
+  otpExpiresAt          DateTime?
+  refreshTokenHash      String?
+  pushToken             String?
+  /// Chat ID Telegram sau khi liên kết thành công (TelegramService.handleWebhookUpdate) — dùng làm
+  /// kênh thông báo song song với push, theo Requirements v2.1 §9 (Telegram Bot).
+  telegramChatId        String?
+  /// Mã tạm thời để liên kết Telegram (deep-link /start) — random mỗi lần bấm "Kết nối Telegram",
+  /// xoá sau khi webhook xác nhận. Không phải secret dài hạn nên không cần hash.
+  telegramLinkCode      String?                @unique
+  /// Bật ở Hồ sơ để hiện diện trong tab Khám phá — mặc định false, chủ động opt-in, tránh lộ
+  /// thông tin người không muốn được chủ nhà lạ tìm thấy/mời.
+  availableForHire      Boolean                @default(false)
+  /// Vai trò đang nhận việc (có thể nhiều, VD vừa thầu chính vừa giám sát) — hiển thị + lọc ở
+  /// tab Khám phá. Khác với ProjectMember.role vốn gắn với 1 dự án cụ thể.
+  offeredRoles          ProjectRole[]          @default([])
+  bio                   String?
+  /// Khu vực hoạt động, dạng text tự do cho MVP (VD "TP.HCM, Bình Dương") — chưa cần geo chuẩn.
+  serviceArea           String?
+  createdAt             DateTime               @default(now())
+  memberships           ProjectMember[]
+  evidences             Evidence[]             @relation("uploader")
+  approvals             Approval[]             @relation("approver")
+  comments              Comment[]              @relation("author")
+  projectMessages       ProjectMessage[]       @relation("projectMessageAuthor")
+  defectsRaised         Defect[]               @relation("raisedBy")
+  proposals             MaterialProposal[]     @relation("proposer")
+  materialCheckPhotos   MaterialCheckPhoto[]   @relation("materialPhotoUploader")
+  materialBatchComments MaterialBatchComment[] @relation("materialBatchCommentAuthor")
+  activityLogs          ActivityLog[]          @relation("activityActor")
+  googleDriveAccounts   GoogleDriveAccount[]
+  reviewsReceived       Review[]               @relation("reviewee")
+  reviewsGiven          Review[]               @relation("reviewer")
+  invitesReceived       ProjectInvite[]        @relation("invitee")
+  invitesSent           ProjectInvite[]        @relation("inviter")
+  notifications         Notification[]
+  planChangesRequested  PlanChangeRequest[]    @relation("planChangeRequester")
+  planChangesDecided    PlanChangeRequest[]    @relation("planChangeDecider")
+  crewMembers           CrewMember[]
+  attendanceCheckIns    AttendanceCheckIn[]    @relation("attendanceCheckInSubmitter")
+  materialLogsReported  MaterialLog[]          @relation("materialLogReporter")
+  materialDayNotesSent  MaterialDayNote[]      @relation("materialDayNoteAuthor")
+  subscriptions         Subscription[]
+  /// Mã giới thiệu riêng của MỌI user, tự sinh lúc tạo tài khoản (xem AuthService.requestOtp) —
+  /// không có khái niệm "founder"/CTV cần duyệt, ai cũng giới thiệu được ngay từ đầu.
+  referralCode          String                 @unique
+  /// Set 1 LẦN DUY NHẤT lúc tạo tài khoản (nhập mã giới thiệu ở màn đăng nhập), áp dụng cho MỌI
+  /// giao dịch sau này của user suốt đời dùng app — không dùng cookie/90 ngày như web vì mobile
+  /// app không có khái niệm "click rồi chưa mua".
+  referredById          String?
+  referredBy            User?                  @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals             User[]                 @relation("UserReferrals")
+  commissionsEarned     Commission[]           @relation("CommissionBeneficiary")
+  commissionsSourced    Commission[]           @relation("CommissionSource")
+  withdrawals           Withdrawal[]
+  workforceReportsSent  WorkforceReport[]      @relation("workforceReportSender")
+}
+
+/// Đội thợ/thầu phụ quen thuộc của 1 user (thường là thầu chính) — độc lập với dự án cụ thể, tái
+/// sử dụng khi mời vào bất kỳ dự án nào họ làm thầu chính. Tự động thêm vào đây mỗi khi họ mời ai
+/// đó làm thầu phụ thành công (xem ProjectsService.assertCanInvite + CrewService.autoSave).
+model CrewMember {
+  id          String      @id @default(uuid())
+  ownerId     String
+  phone       String
+  name        String
+  defaultRole ProjectRole @default(SUB_CONTRACTOR)
+  createdAt   DateTime    @default(now())
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, phone])
+}
+
+/// Thông báo trong app — lưu thường trực (khác với push, vốn chỉ gửi được khi có pushToken và
+/// không giữ lịch sử). Mọi lời gọi NotificationsService.notifyUser/notifyProject đều tự động ghi
+/// vào đây, kể cả khi user chưa cấp quyền push, để màn Thông báo luôn đầy đủ. `type` để mobile biết
+/// icon/điều hướng phù hợp (VD tap thông báo mời thì mở Hồ sơ); `data` giữ id liên quan (projectId,
+/// inviteId...) dạng JSON tự do, không ràng buộc schema cứng vì mỗi loại thông báo khác nhau.
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   @default("GENERIC")
+  title     String
+  body      String
+  data      Json?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, read])
+}
+
+/// Chủ nhà đánh giá 1 chiều cho từng thành viên sau khi dự án DONE — 1 đánh giá/thành viên/dự án
+/// (không sửa lại được, giống mô hình Grab/Shopee). Dùng để tính điểm uy tín hiển thị ở hồ sơ công
+/// khai (tab Khám phá) — hồ sơ công khai chỉ lộ số liệu tổng hợp (điểm TB + số dự án), không lộ
+/// tên/địa chỉ công trình cụ thể để tránh lộ thông tin chủ nhà cũ.
+model Review {
+  id         String   @id @default(uuid())
+  projectId  String
+  revieweeId String
+  reviewerId String
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reviewee   User     @relation("reviewee", fields: [revieweeId], references: [id])
+  reviewer   User     @relation("reviewer", fields: [reviewerId], references: [id])
+
+  @@unique([projectId, revieweeId])
+  @@index([revieweeId])
+}
+
+/// Lời mời từ tab Khám phá — khác với mời trực tiếp bằng SĐT ở ProjectsService.addMember (thêm
+/// thẳng, không cần chấp nhận), lời mời từ Khám phá cần người được mời chủ động accept/decline vì
+/// họ là người lạ với chủ nhà, chưa có quan hệ tin cậy sẵn như mời bằng SĐT quen biết.
+model ProjectInvite {
+  id                 String       @id @default(uuid())
+  projectId          String
+  inviteeId          String
+  inviterId          String
+  role               ProjectRole
+  assignedPhaseCodes String[]     @default([])
+  /// Mời GIÁM SÁT theo từng bước cụ thể (task-based) thay vì cả hạng mục — VD chủ nhà mời 1 giám
+  /// sát riêng chỉ cho bước "Ép cọc". Rỗng = không giới hạn theo bước (kết hợp với
+  /// assignedPhaseCodes rỗng nghĩa là xem toàn bộ dự án — giám sát toàn thời gian/bán thời gian).
+  /// Chỉ có ý nghĩa với role SUPERVISOR — xem ProjectsService.getPhases/WorkflowService.
+  assignedStepIds    String[]     @default([])
+  /// Đội trưởng lãnh đội loại gì — chỉ có ý nghĩa khi role = SUB_CONTRACTOR, xem TeamType.
+  teamType           TeamType?
+  status             InviteStatus @default(PENDING)
+  createdAt          DateTime     @default(now())
+  respondedAt        DateTime?
+  project            Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  invitee            User         @relation("invitee", fields: [inviteeId], references: [id])
+  inviter            User         @relation("inviter", fields: [inviterId], references: [id])
+
+  @@unique([projectId, inviteeId])
+  @@index([inviteeId, status])
+}
+
+model Project {
+  id                    String              @id @default(uuid())
+  name                  String
+  address               String?
+  status                ProjectStatus       @default(DRAFT)
+  contractType          ContractType        @default(THO_VA_NHAN_CONG_HOAN_THIEN)
+  /// Template gốc dùng lúc tạo — cho phép thêm lại 1 hạng mục chuẩn đã bị bỏ trong lúc lập kế hoạch.
+  templateId            String?
+  /// Tài khoản Google Drive của chủ nhà dùng để lưu ảnh/video công trình — bắt buộc chọn lúc tạo
+  /// dự án (xem ProjectsService.create). Nullable ở DB để không phá vỡ các dự án tạo trước khi có
+  /// tính năng này; những dự án đó cần chủ nhà gán tài khoản Drive thủ công trước khi upload được.
+  driveAccountId        String?
+  /// Mốc "ngày 0" để tính lịch thi công dự kiến (Phase.plannedStartDate/plannedEndDate, xem
+  /// ProjectsService.attachPlannedDates) — set tự động = lúc duyệt kế hoạch (approvePlan). Null
+  /// lúc còn PLANNING, khi đó lịch hiển thị là bản xem trước tính từ hôm nay, chưa phải lịch chốt.
+  constructionStartDate DateTime?
+  /// Thông tin tạo dự án theo mockup 04 — text tự do (VD "3 tầng + 1 sân thượng").
+  floors                String?
+  /// "Nhà phố" | "Biệt thự" | "Nhà cấp 4" | "Khác" (mockup 04).
+  buildingType          String?
+  expectedStartDate     DateTime?
+  expectedEndDate       DateTime?
+  /// 1 dự án = 1 bên trả tiền: người tạo dự án. Thành viên được mời dùng miễn phí trong dự án này.
+  billingOwnerId        String?
+  createdAt             DateTime            @default(now())
+  members               ProjectMember[]
+  phases                Phase[]
+  paymentStages         PaymentStage[]
+  defects               Defect[]
+  proposals             MaterialProposal[]
+  materialCheck         MaterialCheck?
+  activityLogs          ActivityLog[]
+  driveAccount          GoogleDriveAccount? @relation(fields: [driveAccountId], references: [id])
+  reviews               Review[]
+  invites               ProjectInvite[]
+  planChangeRequests    PlanChangeRequest[]
+  dailyWeather          DailyWeather[]
+  attendanceCheckIns    AttendanceCheckIn[]
+  materialLogs          MaterialLog[]
+  materialDayNotes      MaterialDayNote[]
+  workforceReports      WorkforceReport[]
+  extraCosts            ExtraCost[]
+  messages              ProjectMessage[]
+}
+
+/// Tài khoản Google Drive mà chủ nhà đã kết nối (OAuth consent) để lưu ảnh/video công trình dưới
+/// Homee/<tên công trình>/<hạng mục thi công> — tránh chi phí lưu trữ hạ tầng vì app miễn phí cho
+/// người dùng. 1 user có thể kết nối nhiều tài khoản Google và chọn account nào dùng cho từng công
+/// trình lúc tạo. refreshToken được mã hoá (AES-256-GCM) trước khi lưu, không bao giờ trả về client.
+model GoogleDriveAccount {
+  id                    String    @id @default(uuid())
+  userId                String
+  googleUserId          String
+  email                 String
+  refreshTokenEncrypted String
+  accessToken           String?
+  accessTokenExpiresAt  DateTime?
+  /// Cache id thư mục gốc "Homee" trong Drive của account này — dùng chung cho mọi công trình của
+  /// account này nên đáng cache; thư mục theo từng công trình/hạng mục thì find-or-create mỗi lần.
+  rootFolderId          String?
+  createdAt             DateTime  @default(now())
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects              Project[]
+
+  @@unique([userId, googleUserId])
+}
+
+model ProjectMember {
+  id                 String            @id @default(uuid())
+  projectId          String
+  userId             String
+  role               ProjectRole
+  assignedPhaseCodes String[]          @default([])
+  /// Giám sát được mời theo từng bước cụ thể (task-based) — xem doc comment ProjectInvite.
+  assignedStepIds    String[]          @default([])
+  /// Đội trưởng lãnh đội loại gì — chỉ có ý nghĩa khi role = SUB_CONTRACTOR, xem TeamType.
+  teamType           TeamType?
+  createdAt          DateTime          @default(now())
+  project            Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user               User              @relation(fields: [userId], references: [id])
+  teamWorkers        TeamWorker[]
+  teamDailyReports   TeamDailyReport[]
+
+  @@unique([projectId, userId])
+}
+
+/// Thợ trong 1 đội — do đội trưởng (ProjectMember role SUB_CONTRACTOR có teamType) tự thêm/xoá,
+/// dùng để điểm danh hàng ngày (TeamAttendance). Không phải User — thợ không cần tài khoản.
+model TeamWorker {
+  id              String           @id @default(uuid())
+  projectMemberId String
+  name            String
+  active          Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  leader          ProjectMember    @relation(fields: [projectMemberId], references: [id], onDelete: Cascade)
+  attendance      TeamAttendance[]
+}
+
+/// Điểm danh 1 thợ trong 1 ngày — đội trưởng toggle có mặt/vắng cho từng thợ, xem
+/// SchedulingController (team endpoints)/mobile team-checkin screen.
+model TeamAttendance {
+  id            String     @id @default(uuid())
+  teamWorkerId  String
+  /// Chỉ phần ngày (00:00 UTC) — luôn ép = hôm nay lúc điểm danh, giống AttendanceCheckIn.date.
+  date          DateTime
+  present       Boolean
+  absenceReason String?
+  createdAt     DateTime   @default(now())
+  teamWorker    TeamWorker @relation(fields: [teamWorkerId], references: [id], onDelete: Cascade)
+
+  @@unique([teamWorkerId, date])
+}
+
+/// Báo cáo công việc hàng ngày của đội trưởng gửi cho nhà thầu — tách biệt với Comment (chung cho
+/// mọi vai trò trên 1 bước) vì đây là báo cáo cấp-đội, không gắn 1 bước cụ thể.
+model TeamDailyReport {
+  id              String            @id @default(uuid())
+  projectMemberId String
+  /// Chỉ phần ngày (00:00 UTC) — 1 báo cáo/đội/ngày, giống AttendanceCheckIn.date.
+  date            DateTime
+  workDone        String
+  planTomorrow    String?
+  issues          String?
+  createdAt       DateTime          @default(now())
+  leader          ProjectMember     @relation(fields: [projectMemberId], references: [id], onDelete: Cascade)
+  media           TeamReportMedia[]
+
+  @@unique([projectMemberId, date])
+}
+
+model TeamReportMedia {
+  id        String          @id @default(uuid())
+  reportId  String
+  objectKey String
+  type      EvidenceType
+  createdAt DateTime        @default(now())
+  report    TeamDailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model Phase {
+  id                  String         @id @default(uuid())
+  projectId           String
+  code                String
+  order               Int
+  name                String
+  status              PhaseStatus    @default(LOCKED)
+  /// Số ngày dự kiến hoàn thành hạng mục — copy từ TemplatePhase.defaultDurationDays lúc tạo, chủ
+  /// nhà chỉnh nhanh/chậm trực tiếp lúc PLANNING hoặc qua PlanChangeRequest lúc ACTIVE.
+  plannedDurationDays Int            @default(7)
+  project             Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  steps               Step[]
+  paymentStages       PaymentStage[] @relation("unlockPhase")
+
+  @@unique([projectId, code])
+  @@index([projectId, order])
+}
+
+model Step {
+  id                  String              @id @default(uuid())
+  phaseId             String
+  order               Int
+  name                String
+  acceptance          String?
+  mandatory           Boolean             @default(true)
+  minPhotos           Int                 @default(1)
+  requiresVideo       Boolean             @default(false)
+  status              StepStatus          @default(LOCKED)
+  /// Số ngày dự kiến để hoàn thành riêng bước này — dùng cho lịch CPM (xem SchedulingService),
+  /// độc lập với Phase.plannedDurationDays vốn chỉ còn mang tính tổng hợp/hiển thị.
+  durationDays        Int                 @default(1)
+  /// Bước phải xong (theo `predecessorRelation`) trước khi bước này được tính vào lịch — có thể
+  /// trỏ sang bước ở BẤT KỲ hạng mục nào (phụ thuộc xuyên hạng mục là thực tế phổ biến, VD "Tháo
+  /// cốt pha tầng hầm" phụ thuộc 1 bước ở hạng mục "Khung kết cấu", không phải cả hạng mục đó).
+  predecessorStepId   String?
+  predecessorRelation StepRelationType    @default(FS)
+  /// Số ngày chờ thêm sau khi predecessor xong mới thật sự tính bắt đầu/kết thúc bước này — khớp
+  /// kiểu "FS+7 days" trong file tiến độ thật (VD thời gian chờ bê tông đạt cường độ).
+  lagDays             Int                 @default(0)
+  /// Nhãn tự do để nhóm hiển thị theo tầng/khu vực ở UI (VD "Tầng hầm", "Lầu 2") — không ảnh hưởng
+  /// logic tính lịch, chỉ dùng để lọc/nhóm.
+  floorLabel          String?
+  /// Thầu tự chọn bước này vào Nhật ký ngày (xem SchedulingService.pickStepForDailyLog) — khác
+  /// hẳn việc lịch CPM tính bước "đúng hạn hôm nay": đây là thầu chủ động chọn báo cáo gì hôm nay,
+  /// không phải hệ thống tự suy. Tự động false lại khi bước APPROVED (xong hẳn, không cần báo cáo
+  /// nữa) — trước đó (OPEN/REJECTED/SUBMITTED/SUPERVISOR_APPROVED) vẫn giữ true để hiện lại mỗi
+  /// ngày tiếp theo tới khi xong, khỏi phải chọn lại.
+  dailyLogActive      Boolean             @default(false)
+  /// Lịch gốc đã chốt tại thời điểm duyệt kế hoạch (xem ProjectsService.approvePlan) — cố định,
+  /// dùng làm mốc so sánh "kế hoạch vs thực tế" (xem SchedulingService). Null khi dự án chưa duyệt
+  /// kế hoạch lần nào.
+  baselineStart       DateTime?
+  baselineEnd         DateTime?
+  phase               Phase               @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  predecessor         Step?               @relation("StepPredecessor", fields: [predecessorStepId], references: [id])
+  successors          Step[]              @relation("StepPredecessor")
+  evidences           Evidence[]
+  approvals           Approval[]
+  comments            Comment[]
+  defects             Defect[]
+  materialItems       MaterialCheckItem[] @relation("MaterialItemSteps")
+  materialLogs        MaterialLog[]       @relation("MaterialLogSteps")
+
+  aiReview            StepAiReview?
+  @@index([phaseId, order])
+  @@index([predecessorStepId])
+}
+
+model Evidence {
+  id         String       @id @default(uuid())
+  stepId     String
+  uploaderId String
+  type       EvidenceType
+  objectKey  String
+  thumbKey   String?
+  takenAt    DateTime?
+  createdAt  DateTime     @default(now())
+  step       Step         @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  uploader   User         @relation("uploader", fields: [uploaderId], references: [id])
+  comments   Comment[]
+}
+
+/// Chấm công công trường bằng ảnh — mỗi thầu (chính/phụ) check-in tối đa 1 lần/ngày cho đội của
+/// mình, kèm ảnh chụp hiện trường xác nhận số lượng thợ có mặt (chống khai khống công). Gắn theo
+/// `submittedBy` (không phải "1 dòng/thợ") vì app không có tài khoản riêng cho từng thợ — thầu là
+/// người report số lượng đội mình. Check-in lại trong cùng ngày ghi đè (sửa nhầm ảnh/số lượng), xem
+/// SchedulingService.postCheckIn — @@unique bên dưới vừa chặn trùng vừa là khoá cho upsert đó.
+model AttendanceCheckIn {
+  id          String   @id @default(uuid())
+  projectId   String
+  submittedBy String
+  /// Chỉ phần ngày (00:00 UTC) — luôn ép = hôm nay lúc tạo, không cho chọn ngày khác.
+  date        DateTime
+  workerCount Int
+  objectKey   String
+  note        String?
+  createdAt   DateTime @default(now())
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user        User     @relation("attendanceCheckInSubmitter", fields: [submittedBy], references: [id])
+
+  @@unique([projectId, submittedBy, date])
+  @@index([projectId, date])
+}
+
+model Approval {
+  id                String        @id @default(uuid())
+  stepId            String
+  approverId        String
+  level             ApprovalLevel
+  decision          Decision
+  note              String?
+  /// Ảnh giám sát chụp thiết bị đo lúc nghiệm thu (VD súng bật nảy, thước cặp điện tử...) — chỉ bắt
+  /// buộc khi level=SUPERVISOR (đòi hỏi từ "book giám sát": mọi giám sát phải có đúng thiết bị,
+  /// chụp hình cho chủ đầu tư mỗi lần nghiệm thu). Null với duyệt của OWNER — chủ nhà không mang
+  /// thiết bị đo. Xem WorkflowService.approveStep.
+  equipmentPhotoKey String?
+  createdAt         DateTime      @default(now())
+  step              Step          @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  approver          User          @relation("approver", fields: [approverId], references: [id])
+}
+
+/// Kết quả đánh giá kỹ thuật của TVGS (giám sát) trên 1 báo cáo ngày — KHÁC với Approval/Decision
+/// vốn là cổng duyệt CHÍNH THỨC 2 lớp để mở bước tiếp theo. Đây chỉ là nhận xét chất lượng không
+/// chính thức, gắn theo từng lượt báo cáo trong Nhật ký ngày (xem Comment.qualityDecision).
+enum ReportQuality {
+  PASSED
+  FAILED
+}
+
+model Comment {
+  id              String         @id @default(uuid())
+  stepId          String
+  evidenceId      String?
+  authorId        String
+  body            String
+  /// % tiến độ thực tế thầu tự báo cáo trong lượt này — chỉ thầu (MAIN_CONTRACTOR/SUB_CONTRACTOR)
+  /// mới điền, dùng cho thẻ việc trong Nhật ký ngày (xem DailyLogService).
+  progressPercent Int?
+  /// Đạt/Chưa đạt — chỉ giám sát (SUPERVISOR) mới điền, đánh giá kỹ thuật cho lượt báo cáo này.
+  qualityDecision ReportQuality?
+  createdAt       DateTime       @default(now())
+  step            Step           @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  evidence        Evidence?      @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  author          User           @relation("author", fields: [authorId], references: [id])
+
+  @@index([stepId, createdAt])
+}
+
+/// Cache thời tiết theo ngày cho 1 dự án — tránh gọi API thời tiết lặp lại nhiều lần cho cùng 1
+/// ngày (xem WeatherService). Toạ độ dự án được geocode 1 lần từ Project.address rồi cache luôn
+/// trên chính bảng này (projectId, date) để khỏi phải geocode lại mỗi lần.
+model DailyWeather {
+  id         String   @id @default(uuid())
+  projectId  String
+  /// Chỉ lấy phần ngày (giờ luôn là 00:00 UTC) — 1 dòng/dự án/ngày.
+  date       DateTime
+  tempC      Float
+  condition  String
+  /// Khung giờ mưa trong ngày, dạng text tự do (VD "14h-16h") — null nếu không mưa.
+  rainWindow String?
+  fetchedAt  DateTime @default(now())
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, date])
+}
+
+model PaymentStage {
+  id                 String             @id @default(uuid())
+  projectId          String
+  order              Int
+  name               String
+  amount             Decimal            @db.Decimal(15, 0)
+  unlockAfterPhaseId String
+  status             PaymentStageStatus @default(LOCKED)
+  paidAt             DateTime?
+  project            Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  unlockAfterPhase   Phase              @relation("unlockPhase", fields: [unlockAfterPhaseId], references: [id])
+
+  @@index([projectId, order])
+}
+
+model Defect {
+  id         String       @id @default(uuid())
+  projectId  String
+  stepId     String?
+  raisedById String
+  title      String
+  status     DefectStatus @default(OPEN)
+  createdAt  DateTime     @default(now())
+  project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  step       Step?        @relation(fields: [stepId], references: [id])
+  raisedBy   User         @relation("raisedBy", fields: [raisedById], references: [id])
+}
+
+/// Nhà cung cấp vật tư — kể cả sàn TMĐT như Shopee cũng là 1 dòng ở đây, không có
+/// nhà cung cấp nào được ưu tiên hiển thị; app chỉ so sánh giá + ăn hoa hồng khi khách
+/// bấm ra ngoài mua ở bất kỳ nguồn nào (không tự bán, không giữ hàng/giữ tiền).
+model Supplier {
+  id            String         @id @default(uuid())
+  name          String
+  isMarketplace Boolean        @default(false)
+  logoUrl       String?
+  createdAt     DateTime       @default(now())
+  offers        ProductOffer[]
+}
+
+/// Sản phẩm chung (catalog) — không gắn giá/nhà cung cấp cụ thể, giá nằm ở ProductOffer.
+model Product {
+  id        String         @id @default(uuid())
+  name      String
+  category  String
+  unit      String?
+  imageUrl  String?
+  /// Shop vật dụng dạng blog (mockup 25): mô tả ngắn, emoji minh hoạ, giá gốc để gạch ngang.
+  description   String?
+  emoji         String?
+  originalPrice Decimal?      @db.Decimal(15, 0)
+  createdAt DateTime       @default(now())
+  offers    ProductOffer[]
+
+  @@index([category])
+}
+
+/// 1 dòng báo giá của 1 nhà cung cấp cho 1 sản phẩm. Nhiều dòng cùng productId
+/// => so sánh giá đa nhà cung cấp, sort theo price tăng dần.
+model ProductOffer {
+  id           String             @id @default(uuid())
+  productId    String
+  supplierId   String
+  price        Decimal            @db.Decimal(15, 0)
+  affiliateUrl String?
+  note         String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  product      Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier     Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  proposals    MaterialProposal[]
+
+  @@unique([productId, supplierId])
+  @@index([productId, price])
+}
+
+model MaterialProposal {
+  id         String         @id @default(uuid())
+  projectId  String
+  offerId    String
+  proposerId String
+  status     ProposalStatus @default(PROPOSED)
+  note       String?
+  createdAt  DateTime       @default(now())
+  project    Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  offer      ProductOffer   @relation(fields: [offerId], references: [id])
+  proposer   User           @relation("proposer", fields: [proposerId], references: [id])
+}
+
+/// Cổng duyệt vật tư trước thi công — 1-1 với Project, tự tạo lúc project được tạo (nếu
+/// contractType khác NHAN_CONG). Thầu chụp ảnh vật liệu tập kết theo từng loại (MaterialCheckItem)
+/// rồi submit, chủ nhà duyệt/từ chối RIÊNG TỪNG loại — status tổng ở đây chỉ APPROVED khi mọi item
+/// đều APPROVED, và chỉ khi APPROVED mới duyệt được kế hoạch thi công (xem ProjectsService.approvePlan).
+model MaterialCheck {
+  id          String              @id @default(uuid())
+  projectId   String              @unique
+  status      MaterialCheckStatus @default(PENDING)
+  note        String?
+  submittedAt DateTime?
+  decidedAt   DateTime?
+  decidedById String?
+  createdAt   DateTime            @default(now())
+  project     Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items       MaterialCheckItem[]
+}
+
+/// Nhóm vật tư theo phần thi công — dùng để lọc/tab ở màn Kiểm soát vật tư (Phần Thô/Sơn/Cửa/Nội
+/// thất theo mockup product team).
+enum MaterialCategory {
+  THO
+  SON
+  CUA
+  NOI_THAT
+}
+
+/// 1 loại vật tư trong cổng duyệt, VD "Xi măng Hà Tiên" — nhóm theo `label` (unique trong 1
+/// MaterialCheck). `status` là trạng thái TỔNG suy ra từ các đợt tập kết (batches) — APPROVED khi
+/// có ít nhất 1 đợt được duyệt, xem MaterialCheckService.recomputeItemStatus. Liên kết `steps`
+/// (Dùng cho: Việc X, Y, Z trong mockup) để biết vật tư này phục vụ đúng bước/hạng mục nào — thầu
+/// bắt buộc khai báo khi tạo item, giúp chủ nhà/giám sát biết vật tư có đúng chỗ dùng không.
+model MaterialCheckItem {
+  id              String                  @id @default(uuid())
+  materialCheckId String
+  label           String
+  category        MaterialCategory        @default(THO)
+  /// Số lượng dạng text tự do (VD "120 bao 50kg") — không ép kiểu số vì đơn vị vật tư rất đa dạng.
+  quantityLabel   String?
+  unitPrice       Decimal?                @db.Decimal(15, 0)
+  /// Tổng giá trị theo hợp đồng (VD "HĐ 13.8tr" trong mockup) — khác unitPrice × số lượng vì có
+  /// thể đã áp giá trọn gói/chiết khấu, không suy ra tự động.
+  contractValue   Decimal?                @db.Decimal(15, 0)
+  status          MaterialItemStatus      @default(PENDING)
+  note            String?
+  decidedAt       DateTime?
+  decidedById     String?
+  createdAt       DateTime                @default(now())
+  /// Ai KHAI BÁO loại vật tư này — mặc định MAIN_CONTRACTOR (thầu tập kết, chủ nhà duyệt, luồng
+  /// gốc). Khi OWNER (chủ nhà đã có sẵn vật tư, VD mua trước 100 thùng gạch) thì đảo vai: OWNER
+  /// nộp, MAIN_CONTRACTOR duyệt/tiếp nhận số lượng — xem MaterialCheckService.decideBatch. Chỉ 2
+  /// giá trị này được dùng (không phải SUB_CONTRACTOR/SUPERVISOR), ép ở addPhoto.
+  submittedByRole ProjectRole             @default(MAIN_CONTRACTOR)
+  materialCheck   MaterialCheck           @relation(fields: [materialCheckId], references: [id], onDelete: Cascade)
+  batches         MaterialDeliveryBatch[]
+  steps           Step[]                  @relation("MaterialItemSteps")
+
+  @@unique([materialCheckId, label])
+}
+
+/// 1 đợt tập kết vật tư (VD "Đợt 1 — Sai thương hiệu (Holcim)" trong mockup) — TÁCH khỏi
+/// MaterialCheckItem vì 1 loại vật tư có thể phải tập kết/nộp lại NHIỀU lần (bị từ chối rồi bổ
+/// sung), mỗi lần có ảnh + quyết định + bình luận RIÊNG, không ghi đè lịch sử lần trước như model
+/// cũ (trước đây chỉ có 1 status/note trên chính Item nên mất lịch sử các lần nộp trước).
+model MaterialDeliveryBatch {
+  id           String                 @id @default(uuid())
+  itemId       String
+  /// Số thứ tự đợt trong item này (1, 2, 3...) — hiển thị "Đợt N" ở mobile.
+  batchNumber  Int
+  supplierName String?
+  deliveredAt  DateTime?
+  status       MaterialItemStatus     @default(PENDING)
+  note         String?
+  decidedAt    DateTime?
+  decidedById  String?
+  createdAt    DateTime               @default(now())
+  item         MaterialCheckItem      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  photos       MaterialCheckPhoto[]
+  comments     MaterialBatchComment[]
+
+  @@unique([itemId, batchNumber])
+}
+
+model MaterialCheckPhoto {
+  id         String                @id @default(uuid())
+  batchId    String
+  uploaderId String
+  objectKey  String
+  createdAt  DateTime              @default(now())
+  batch      MaterialDeliveryBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  uploader   User                  @relation("materialPhotoUploader", fields: [uploaderId], references: [id])
+}
+
+/// Bình luận tự do trên 1 đợt tập kết — thầu/giám sát/chủ nhà đều bình luận được (khác quyết định
+/// duyệt/từ chối, vốn chỉ chủ nhà làm — xem MaterialCheckService.decideBatch), dùng để trao đổi
+/// kỹ thuật (VD giám sát hỏi rõ quy cách, thầu giải thích lý do trễ hàng).
+model MaterialBatchComment {
+  id        String                @id @default(uuid())
+  batchId   String
+  authorId  String
+  body      String
+  createdAt DateTime              @default(now())
+  batch     MaterialDeliveryBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  author    User                  @relation("materialBatchCommentAuthor", fields: [authorId], references: [id])
+}
+
+/// Nhật ký vật tư — thầu (chính/phụ, gồm cả đội trưởng) báo cáo vật tư nhập vào công trình THEO
+/// NGÀY, gắn với 1 hay nhiều bước thi công, bắt buộc kèm ảnh hóa đơn. Khác hẳn MaterialCheck (cổng
+/// duyệt vật tư TRƯỚC thi công, chốt 1 lần theo từng loại) — đây là log liên tục suốt quá trình thi
+/// công, không cần chủ nhà duyệt. unitPrice chỉ MAIN_CONTRACTOR (người chi tiền) thấy được, kể cả
+/// khi chính đội trưởng (SUB_CONTRACTOR) là người báo cáo — xem MaterialLogService.canSeePrice.
+model MaterialLog {
+  id           String             @id @default(uuid())
+  projectId    String
+  reportedById String
+  reportDate   DateTime           @db.Date
+  name         String
+  quantity     Decimal            @db.Decimal(12, 2)
+  unit         String
+  unitPrice    Decimal?           @db.Decimal(15, 0)
+  note         String?
+  createdAt    DateTime           @default(now())
+  project      Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reportedBy   User               @relation("materialLogReporter", fields: [reportedById], references: [id])
+  steps        Step[]             @relation("MaterialLogSteps")
+  photos       MaterialLogPhoto[]
+
+  @@index([projectId, reportDate])
+}
+
+model MaterialLogPhoto {
+  id            String      @id @default(uuid())
+  materialLogId String
+  objectKey     String
+  createdAt     DateTime    @default(now())
+  materialLog   MaterialLog @relation(fields: [materialLogId], references: [id], onDelete: Cascade)
+}
+
+/// Ghi chú cho thầu theo NGÀY (không gắn 1 vật tư cụ thể) — chủ nhà/giám sát gửi, thầu chỉ đọc,
+/// xem mockup "Vật tư — Chủ nhà" ô "Ghi chú cho thầu".
+model MaterialDayNote {
+  id        String   @id @default(uuid())
+  projectId String
+  date      DateTime @db.Date
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  author    User     @relation("materialDayNoteAuthor", fields: [authorId], references: [id])
+
+  @@index([projectId, date])
+}
+
+/// Gói subscription — khớp với "Bảng giá" (owner/contractor theo kỳ hạn) + "AI Premium" (add-on
+/// mua đứt). Theo ngày + chỉ được 1 kỳ hạn chuẩn (tuần/tháng/2 tháng/3 tháng/6 tháng/năm), KHÔNG
+/// có 9 tháng — nên gói "6 tháng/9 tháng/12 tháng" ở bảng giá được xử lý thành ONE_TIME (mua đứt 1
+/// lần, backend tự cộng dồn hạn dùng) thay vì subscription tự động gia hạn, chỉ riêng gói "theo
+/// tháng" mới là auto-renewing subscription thật. Xem PLAN_CATALOG (SubscriptionService).
+enum SubscriptionPlan {
+  OWNER_MONTHLY
+  OWNER_6MONTH
+  OWNER_9MONTH
+  OWNER_12MONTH
+  CONTRACTOR_MONTHLY
+  CONTRACTOR_10PROJECTS
+  CONTRACTOR_YEARLY
+  AI_PREMIUM
+}
+
+enum SubscriptionStore {
+  APPLE
+  GOOGLE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+/// 1 lượt mua IAP đã xác thực với Apple/Google — xem SubscriptionService.verifyPurchase. Mỗi lần
+/// mua tạo 1 record mới (không update đè record cũ) để giữ lịch sử giao dịch đầy đủ; trạng thái
+/// "đang có hiệu lực" của user được tính bằng cách lấy record mới nhất theo plan chưa hết hạn.
+model Subscription {
+  id             String             @id @default(uuid())
+  userId         String
+  plan           SubscriptionPlan
+  store          SubscriptionStore
+  productId      String
+  status         SubscriptionStatus @default(ACTIVE)
+  /// true nếu đây là gói tự động gia hạn (OWNER_MONTHLY/CONTRACTOR_MONTHLY) — các gói mua đứt
+  /// (6/9/12 tháng, 10 dự án, AI Premium) luôn false.
+  isAutoRenewing Boolean            @default(false)
+  /// Google: purchaseToken. Apple: originalTransactionId. Dùng để tra cứu lại trạng thái mới nhất
+  /// với store khi cần (VD webhook gia hạn/huỷ trong tương lai).
+  purchaseToken  String?
+  /// ID giao dịch (Apple transactionId, Google orderId) — unique để chặn xác thực trùng 1 giao
+  /// dịch 2 lần (VD app gọi verify lại sau khi mất mạng giữa chừng).
+  transactionId  String             @unique
+  startedAt      DateTime           @default(now())
+  /// Null = vĩnh viễn (AI Premium mua đứt 1 lần, dùng mãi mãi).
+  expiresAt      DateTime?
+  createdAt      DateTime           @default(now())
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commission     Commission?
+
+  @@index([userId, plan])
+}
+
+/// 1 giao dịch mua (= 1 Subscription) sinh ra tối đa 1 Commission cho user đã giới thiệu người mua
+/// (nếu có) — tính ngay lúc verify giao dịch thành công (xem SubscriptionService.verifyPurchase →
+/// AffiliateService.recordCommission). Số tiền lấy TRỰC TIẾP từ PLAN_CATALOG × REFERRAL_RATE
+/// (không duplicate sang 1 bảng giá commission riêng — tránh lệch giá giữa 2 nơi). Flat 1 tầng:
+/// chỉ người giới thiệu TRỰC TIẾP nhận, không chia nhiều tầng.
+model Commission {
+  id                String       @id @default(uuid())
+  subscriptionId    String       @unique
+  beneficiaryUserId String
+  sourceUserId      String
+  amount            Decimal      @db.Decimal(15, 0)
+  createdAt         DateTime     @default(now())
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  beneficiary       User         @relation("CommissionBeneficiary", fields: [beneficiaryUserId], references: [id])
+  sourceUser        User         @relation("CommissionSource", fields: [sourceUserId], references: [id])
+
+  @@index([beneficiaryUserId])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+/// Yêu cầu rút tiền của founder/sale — chỉ ghi nhận yêu cầu, xử lý chuyển khoản thủ công ngoài hệ
+/// thống (không tích hợp cổng chi tiền tự động trong scaffold này).
+model Withdrawal {
+  id          String           @id @default(uuid())
+  userId      String
+  amount      Decimal          @db.Decimal(15, 0)
+  bankName    String
+  bankAccount String
+  /// Chủ tài khoản (mockup 33) — nullable cho các yêu cầu cũ.
+  accountHolder String?
+  status      WithdrawalStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  user        User             @relation(fields: [userId], references: [id])
+}
+
+/// Nhật ký thi công — feed sự kiện theo thời gian cho mỗi công trình. Phần lớn record được hệ
+/// thống tự ghi lúc có hành động liên quan (duyệt bước, upload ảnh, lỗi mới...), cộng thêm ghi
+/// chú tự do (kind = NOTE) do thầu/chủ nhà chủ động thêm tay.
+enum ActivityKind {
+  NOTE
+  STEP_SUBMITTED
+  STEP_APPROVED
+  STEP_REJECTED
+  EVIDENCE_ADDED
+  DEFECT_CREATED
+  DEFECT_UPDATED
+  PAYMENT_STAGE_CONFIRMED
+  PLAN_APPROVED
+  MATERIAL_CHECK_SUBMITTED
+  MATERIAL_CHECK_DECIDED
+  PHASE_ADDED
+  PHASE_REMOVED
+  STEP_ADDED
+  STEP_REMOVED
+  PHASE_DURATION_CHANGED
+  PLAN_CHANGE_REQUESTED
+  PLAN_CHANGE_APPROVED
+  PLAN_CHANGE_REJECTED
+  INVITE_ACCEPTED
+  INVITE_DECLINED
+  PHASE_REORDERED
+}
+
+/// Đề xuất sửa kế hoạch thi công của thầu chính/chủ nhà lên bên kia duyệt. Lúc PLANNING chủ nhà
+/// vẫn sửa trực tiếp (không tạo request), chỉ thầu chính mới cần đề xuất; lúc ACTIVE cả 2 chiều
+/// đều phải qua đề xuất/duyệt (xem PlanChangeService, backend/src/plan-change).
+model PlanChangeRequest {
+  id                 String         @id @default(uuid())
+  projectId          String
+  requestedById      String
+  /// Vai trò của người sẽ duyệt đề xuất này — OWNER nếu người đề xuất là MAIN_CONTRACTOR, hoặc
+  /// MAIN_CONTRACTOR nếu người đề xuất là OWNER (chỉ xảy ra lúc project ACTIVE).
+  targetApproverRole ProjectRole
+  type               PlanChangeType
+  /// Dữ liệu thay đổi, hình dạng khác nhau tuỳ `type` — xem PlanChangeService để biết cấu trúc
+  /// từng loại (ADD_PHASE, REMOVE_PHASE, ADD_STEP, REMOVE_STEP, ADJUST_DURATION).
+  payload            Json
+  note               String?
+  status             ProposalStatus @default(PROPOSED)
+  decidedById        String?
+  decidedAt          DateTime?
+  decisionNote       String?
+  createdAt          DateTime       @default(now())
+  project            Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  requestedBy        User           @relation("planChangeRequester", fields: [requestedById], references: [id])
+  decidedBy          User?          @relation("planChangeDecider", fields: [decidedById], references: [id])
+
+  @@index([projectId, status])
+}
+
+model ActivityLog {
+  id        String       @id @default(uuid())
+  projectId String
+  actorId   String?
+  kind      ActivityKind
+  message   String
+  stepId    String?
+  createdAt DateTime     @default(now())
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  actor     User?        @relation("activityActor", fields: [actorId], references: [id])
+
+  @@index([projectId, createdAt])
+}
+
+model Tip {
+  id        String   @id @default(uuid())
+  phaseCode String?
+  title     String
+  body      String
+  linkUrl   String?
+  /// Bộ lọc Thông tin (mockup 24): "Phần thô" | "Hoàn thiện" | "Mẹo hay".
+  category    String?
+  emoji       String?
+  readMinutes Int?
+  createdAt DateTime @default(now())
+
+  @@index([phaseCode])
+}
+
+model ProcessTemplate {
+  id      String          @id @default(uuid())
+  name    String
+  version String
+  phases  TemplatePhase[]
+}
+
+model TemplatePhase {
+  id                  String          @id @default(uuid())
+  templateId          String
+  code                String
+  order               Int
+  name                String
+  /// Số ngày dự kiến mặc định cho hạng mục này — copy sang Phase.plannedDurationDays lúc tạo dự án
+  /// hoặc thêm lại hạng mục chuẩn.
+  defaultDurationDays Int             @default(7)
+  /// Dùng để lọc hạng mục theo loại hợp đồng — xem PhaseScope.
+  scope               PhaseScope      @default(HOAN_THIEN)
+  template            ProcessTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  steps               TemplateStep[]
+}
+
+model TemplateStep {
+  id            String        @id @default(uuid())
+  phaseId       String
+  order         Int
+  name          String
+  acceptance    String?
+  mandatory     Boolean       @default(true)
+  minPhotos     Int           @default(1)
+  requiresVideo Boolean       @default(false)
+  /// Nhãn tầng mặc định cho bước lặp theo tầng (VD "Tầng trệt") — copy sang Step.floorLabel lúc
+  /// tạo dự án; chủ nhà bấm "+" nhân bản thêm cho các tầng khác ngay trong Plan editor.
+  floorLabel    String?
+  phase         TemplatePhase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+}
+
+/// Báo cáo nhân công hàng ngày gửi chủ đầu tư (mockup 20–21): ảnh nhân công tại công trình + số
+/// có mặt/tổng lúc gửi. Điểm danh từng thợ vẫn nằm ở TeamAttendance; đây chỉ là "lượt gửi" của ngày.
+model WorkforceReport {
+  id           String                 @id @default(uuid())
+  projectId    String
+  /// Chỉ phần ngày (00:00 UTC), giống TeamAttendance.date.
+  date         DateTime
+  sentById     String
+  sentAt       DateTime               @default(now())
+  presentCount Int
+  totalCount   Int
+  project      Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sentBy       User                   @relation("workforceReportSender", fields: [sentById], references: [id])
+  photos       WorkforceReportPhoto[]
+
+  @@unique([projectId, date])
+}
+
+model WorkforceReportPhoto {
+  id        String          @id @default(uuid())
+  reportId  String
+  objectKey String
+  createdAt DateTime        @default(now())
+  report    WorkforceReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+/// Kết quả "AI kiểm tra bằng chứng" của 1 bước (mockup 14–15) — lưu lại để mở lại không gọi AI.
+/// evidenceIds: danh sách ảnh lúc kiểm tra; có ảnh mới thì kiểm tra lại.
+model StepAiReview {
+  id          String   @id @default(uuid())
+  stepId      String   @unique
+  evidenceIds String[]
+  result      Json
+  createdAt   DateTime @default(now())
+  step        Step     @relation(fields: [stepId], references: [id], onDelete: Cascade)
+}
+
+/// Mỗi lần gọi AI (kiểm tra bằng chứng, hỏi AI, đối chiếu tiến độ) — đếm hạn mức lượt/dự án/tháng.
+model AiUsage {
+  id        String   @id @default(uuid())
+  projectId String
+  userId    String
+  kind      String
+  createdAt DateTime @default(now())
+
+  @@index([projectId, createdAt])
+}
+
+/// Lịch sử sửa vật tư (review 10.6 #12): mỗi lần sửa lưu lại giá trị trước khi sửa.
+model MaterialLogRevision {
+  id            String   @id @default(uuid())
+  materialLogId String
+  editedById    String
+  before        Json
+  createdAt     DateTime @default(now())
+
+  @@index([materialLogId])
+}
+
+/// Chi phí phát sinh ngoài hợp đồng (review 10.6 #5) — thầu hoặc chủ nhà đề xuất, bên kia duyệt.
+model ExtraCost {
+  id          String          @id @default(uuid())
+  projectId   String
+  title       String
+  amount      Decimal         @db.Decimal(15, 0)
+  note        String?
+  phaseCode   String?
+  createdById String
+  status      ExtraCostStatus @default(PENDING)
+  decidedAt   DateTime?
+  createdAt   DateTime        @default(now())
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+enum ExtraCostStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/// Chat chung của dự án (cửa sổ chat nổi) — mọi thành viên nhắn nhanh, tag "@Tên" để báo riêng.
+/// Khác Comment gắn với từng bước/ảnh. Không sửa/xoá tin cho MVP.
+model ProjectMessage {
+  id        String   @id @default(uuid())
+  projectId String
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  author    User     @relation("projectMessageAuthor", fields: [authorId], references: [id])
+
+  @@index([projectId, createdAt])
+}
+
+enum AdPlacement {
+  /// Popup giữa màn hình, tối đa 1 lần/ngày/quảng cáo.
+  POPUP
+  /// Banner xen trong danh sách (tab Báo cáo, Tổng quan).
+  BANNER
+}
+
+/// Quảng cáo của nhà quảng cáo bên ngoài — admin đăng ở /admin, chỉ hiện trong [startsAt, endsAt]
+/// và khi `active`. Ảnh lưu trên R2.
+model Ad {
+  id         String      @id @default(uuid())
+  title      String
+  imageUrl   String
+  linkUrl    String?
+  placement  AdPlacement
+  startsAt   DateTime
+  endsAt     DateTime
+  active     Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+
+  @@index([placement, startsAt, endsAt])
+}

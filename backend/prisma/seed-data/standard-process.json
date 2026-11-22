@@ -1,0 +1,1503 @@
+{
+  "name": "Quy trình thi công + giám sát tích hợp",
+  "version": "2026-09-22",
+  "source": "Cập nhật theo Requirements v2.1 (product, 2026-09-22) — 31 bước chính chia 4 giai đoạn (Chuẩn bị & mặt bằng, Phần thô, Phần hoàn thiện, Defect & bàn giao), thay cho bộ B-01→B-35 trước đó.",
+  "phases": [
+    {
+      "code": "B-01",
+      "order": 1,
+      "name": "Công tác tiếp nhận mặt bằng",
+      "defaultDurationDays": 2,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Tiếp nhận mặt bằng thô, đối chiếu hồ sơ thiết kế với thực tế và giấy phép xây dựng",
+          "acceptance": "Tiếp nhận mặt bằng thô, đối chiếu hồ sơ thiết kế với thực tế và giấy phép xây dựng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Kiểm tra hiện trạng",
+          "acceptance": "Kiểm tra hiện trạng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Kiểm tra công tác an toàn trước khi thi công",
+          "acceptance": "Kiểm tra công tác an toàn trước khi thi công",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Kiểm tra hiện trạng nhà hàng xóm trước khi thi công",
+          "acceptance": "Kiểm tra hiện trạng nhà hàng xóm trước khi thi công",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-02",
+      "order": 2,
+      "name": "An toàn lao động & bao che công trình",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm tra hiện trạng và điều kiện an toàn của mặt bằng",
+          "acceptance": "Kiểm tra hiện trạng và điều kiện an toàn của mặt bằng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lập biện pháp an toàn, vệ sinh và bảo vệ công trình/lân cận",
+          "acceptance": "Lập biện pháp an toàn, vệ sinh và bảo vệ công trình/lân cận",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Lắp biển báo, nội quy, trang bị bảo hộ",
+          "acceptance": "Lắp biển báo, nội quy, trang bị bảo hộ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Lắp hệ khung bao che, giằng, sàn thao tác",
+          "acceptance": "Lắp hệ khung bao che, giằng, sàn thao tác",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Lắp bạt/lưới bao che ngoài và trong, cố định chắc chắn",
+          "acceptance": "Lắp bạt/lưới bao che ngoài và trong, cố định chắc chắn",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Hoàn thiện lối đi, vị trí tập kết và khu vực cảnh báo",
+          "acceptance": "Hoàn thiện lối đi, vị trí tập kết và khu vực cảnh báo",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-03",
+      "order": 3,
+      "name": "Tháo dỡ",
+      "defaultDurationDays": 5,
+      "scope": "THAO_DO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Khảo sát, đánh giá kết cấu và lập phương án tháo dỡ",
+          "acceptance": "Khảo sát, đánh giá kết cấu và lập phương án tháo dỡ",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lắp bao che, chống bụi và hệ thao tác",
+          "acceptance": "Lắp bao che, chống bụi và hệ thao tác",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Gia cố/chống đỡ các cấu kiện cần bảo vệ",
+          "acceptance": "Gia cố/chống đỡ các cấu kiện cần bảo vệ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Khoan cắt, tháo dỡ tường và cấu kiện theo phương án; không để xà bần rơi tự do",
+          "acceptance": "Khoan cắt, tháo dỡ tường và cấu kiện theo phương án; không để xà bần rơi tự do",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Thu gom, vận chuyển xà bần đúng khu vực",
+          "acceptance": "Thu gom, vận chuyển xà bần đúng khu vực",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Vệ sinh và đánh giá lại kết cấu giữ lại trước khi bàn giao mặt bằng",
+          "acceptance": "Vệ sinh và đánh giá lại kết cấu giữ lại trước khi bàn giao mặt bằng",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-04",
+      "order": 4,
+      "name": "Ép cọc",
+      "defaultDurationDays": 3,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm tra hồ sơ cọc, vị trí tim cọc và điều kiện máy ép",
+          "acceptance": "Kiểm tra hồ sơ cọc, vị trí tim cọc và điều kiện máy ép",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Kiểm tra ngoại quan, chất lượng sơ bộ và vết nứt của cọc trước khi hạ",
+          "acceptance": "Kiểm tra ngoại quan, chất lượng sơ bộ và vết nứt của cọc trước khi hạ",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Thực hiện ép theo trình tự thiết kế; ghi nhật ký từng cọc",
+          "acceptance": "Thực hiện ép theo trình tự thiết kế; ghi nhật ký từng cọc",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true
+        },
+        {
+          "order": 4,
+          "name": "Đo cao độ đầu cọc sau ép/đập đầu cọc và chuyển số liệu sang bước móng",
+          "acceptance": "Đo cao độ đầu cọc sau ép/đập đầu cọc và chuyển số liệu sang bước móng",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-05",
+      "order": 5,
+      "name": "Móng — Hầm phân — Điện nước ngầm",
+      "defaultDurationDays": 5,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Cốp pha móng & cao độ đầu cọc",
+          "acceptance": "Cốp pha móng & cao độ đầu cọc",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Ống điện nước âm nền trệt",
+          "acceptance": "Ống điện nước âm nền trệt",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Hầm phân",
+          "acceptance": "Hầm phân",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Thép móng, dầm móng",
+          "acceptance": "Thép móng, dầm móng",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-06",
+      "order": 6,
+      "name": "Đổ bê tông móng",
+      "defaultDurationDays": 2,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm tra tiêu chuẩn bê tông tươi, bảo dưỡng bê tông",
+          "acceptance": "Kiểm tra tiêu chuẩn bê tông tươi, bảo dưỡng bê tông",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Nghiệm thu tường móng sau khi tháo coffa",
+          "acceptance": "Nghiệm thu tường móng sau khi tháo coffa",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-07",
+      "order": 7,
+      "name": "Cốp pha, thép dầm sàn + điện nước âm sàn",
+      "defaultDurationDays": 6,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Lắp coffa sàn, chống đỡ, kiểm cao độ và độ kín khít — Tầng trệt",
+          "acceptance": "Lắp coffa sàn, chống đỡ, kiểm cao độ và độ kín khít. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Lắp thép giằng chân tường và thép sàn — Tầng trệt",
+          "acceptance": "Lắp thép giằng chân tường và thép sàn. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Lắp thép dầm, neo, nối và lớp bảo vệ — Tầng trệt",
+          "acceptance": "Lắp thép dầm, neo, nối và lớp bảo vệ. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Lắp điện nước âm sàn: ống điện/nước, hộp box, lỗ chờ xuyên sàn — Tầng trệt",
+          "acceptance": "Lắp điện nước âm sàn: ống điện/nước, hộp box, lỗ chờ xuyên sàn. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-08",
+      "order": 8,
+      "name": "Xây cầu thang",
+      "defaultDurationDays": 4,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Chia bậc theo chiều cao tầng thực tế, bật mực dốc thang, lắp đặt ván khuôn — Tầng trệt",
+          "acceptance": "Chia bậc theo chiều cao tầng thực tế, bật mực dốc thang, lắp đặt ván khuôn. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Bố trí và đan cốt thép — Tầng trệt",
+          "acceptance": "Bố trí và đan cốt thép. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Chuẩn bị hệ chống và giàn giáo — Tầng trệt",
+          "acceptance": "Chuẩn bị hệ chống và giàn giáo. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Đổ bê tông — Tầng trệt",
+          "acceptance": "Đổ bê tông. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 5,
+          "name": "Phối hợp MEP và các chi tiết chờ — Tầng trệt",
+          "acceptance": "Phối hợp MEP và các chi tiết chờ. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 6,
+          "name": "Vệ sinh và chuẩn bị trước khi đổ bê tông — Tầng trệt",
+          "acceptance": "Vệ sinh và chuẩn bị trước khi đổ bê tông. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 7,
+          "name": "Đổ bê tông cầu thang & bảo dưỡng — Tầng trệt",
+          "acceptance": "Đổ bê tông cầu thang & bảo dưỡng. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 8,
+          "name": "Xây chia bậc — Tầng trệt",
+          "acceptance": "Xây chia bậc. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-09",
+      "order": 9,
+      "name": "Đổ bê tông sàn & xoa mặt chống nứt",
+      "defaultDurationDays": 2,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm hồ sơ bê tông tươi trước bơm/đổ — Tầng trệt",
+          "acceptance": "Kiểm hồ sơ bê tông tươi trước bơm/đổ. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Đổ và đầm bê tông theo phân khu, kiểm mạch ngừng — Tầng trệt",
+          "acceptance": "Đổ và đầm bê tông theo phân khu, kiểm mạch ngừng. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Xoa mặt chống nứt theo biện pháp, ưu tiên sàn mái/sân thượng — Tầng trệt",
+          "acceptance": "Xoa mặt chống nứt theo biện pháp, ưu tiên sàn mái/sân thượng. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Bảo dưỡng sàn đúng thời gian và phương pháp — Tầng trệt",
+          "acceptance": "Bảo dưỡng sàn đúng thời gian và phương pháp. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-10",
+      "order": 10,
+      "name": "Thép & coffa cột — đổ bê tông cột",
+      "defaultDurationDays": 3,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm tra các thép cột & coffa cột — Tầng trệt",
+          "acceptance": "Kiểm tra các thép cột & coffa cột. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Sau khi đổ bê tông cột — Tầng trệt",
+          "acceptance": "Sau khi đổ bê tông cột. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Kiểm tra mác bê tông trước khi tháo chống — Tầng trệt",
+          "acceptance": "Kiểm tra mác bê tông trước khi tháo chống. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-11",
+      "order": 11,
+      "name": "Xây tường bao xung quanh nhà",
+      "defaultDurationDays": 5,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Xây tường bao",
+          "acceptance": "Xây tường bao",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Tưới nước tường bao",
+          "acceptance": "Tưới nước tường bao",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-12",
+      "order": 12,
+      "name": "Chống thấm sân thượng và lợp mái",
+      "defaultDurationDays": 7,
+      "scope": "KET_CAU_THO",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Chuẩn bị bề mặt và thi công chống thấm sàn mái/sân thượng theo hệ vật liệu được duyệt",
+          "acceptance": "Chuẩn bị bề mặt và thi công chống thấm sàn mái/sân thượng theo hệ vật liệu được duyệt",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Thử nước/kiểm tra rò rỉ và cán lớp bảo vệ",
+          "acceptance": "Thử nước/kiểm tra rò rỉ và cán lớp bảo vệ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": true
+        },
+        {
+          "order": 3,
+          "name": "Lắp bồn nước và thử áp hệ cấp nước",
+          "acceptance": "Lắp bồn nước và thử áp hệ cấp nước",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": true
+        },
+        {
+          "order": 4,
+          "name": "Lắp xà gồ mái, kiểm liên kết và chống gỉ",
+          "acceptance": "Lắp xà gồ mái, kiểm liên kết và chống gỉ",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Lợp ngói/tấm mái, hoàn thiện úp nóc, diềm và chồng mí",
+          "acceptance": "Lợp ngói/tấm mái, hoàn thiện úp nóc, diềm và chồng mí",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-13",
+      "order": 13,
+      "name": "Định vị, bật mực tường trong",
+      "defaultDurationDays": 2,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Nhận mặt bằng, kiểm mốc và thiết bị trắc đạc",
+          "acceptance": "Nhận mặt bằng, kiểm mốc và thiết bị trắc đạc",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Định vị tim trục, mốc và gửi mốc tại công trình",
+          "acceptance": "Định vị tim trục, mốc và gửi mốc tại công trình",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Bật mực cote +1.000 mm, tim/biên tường xây và vị trí cửa/lỗ chờ",
+          "acceptance": "Bật mực cote +1.000 mm, tim/biên tường xây và vị trí cửa/lỗ chờ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Bật mực bố trí nội thất liền tường, nội thất rời và vật dụng",
+          "acceptance": "Bật mực bố trí nội thất liền tường, nội thất rời và vật dụng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Ghi nhận thông tin lên bản vẽ triển khai để dùng cho các bước sau",
+          "acceptance": "Ghi nhận thông tin lên bản vẽ triển khai để dùng cho các bước sau",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-14",
+      "order": 14,
+      "name": "Xây tường trong",
+      "defaultDurationDays": 6,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Bật mực định vị chân tường, cửa, cột kẹp và lỗ chờ",
+          "acceptance": "Bật mực định vị chân tường, cửa, cột kẹp và lỗ chờ",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Khoan cấy râu thép/liên kết vào cột, vách theo thiết kế",
+          "acceptance": "Khoan cấy râu thép/liên kết vào cột, vách theo thiết kế",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Xây tường: tưới ẩm gạch, căng dây, xây theo hàng, bổ trụ và chèn khóa 45° ở đỉnh tường khi áp dụng",
+          "acceptance": "Xây tường: tưới ẩm gạch, căng dây, xây theo hàng, bổ trụ và chèn khóa 45° ở đỉnh tường khi áp dụng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Bảo dưỡng tường sau xây; chỉ cắt đục đi ống điện nước sau thời gian chờ phù hợp",
+          "acceptance": "Bảo dưỡng tường sau xây; chỉ cắt đục đi ống điện nước sau thời gian chờ phù hợp",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-15",
+      "order": 15,
+      "name": "Điện nước âm tường — trần",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Định vị ổ cắm, công tắc, thiết bị, đường nước và điểm chờ — Tầng trệt",
+          "acceptance": "Định vị ổ cắm, công tắc, thiết bị, đường nước và điểm chờ. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Cắt rãnh, lắp ống và cố định chắc; gia cường lưới tại rãnh tường trước trám — Tầng trệt",
+          "acceptance": "Cắt rãnh, lắp ống và cố định chắc; gia cường lưới tại rãnh tường trước trám. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Kết nối ống, xử lý kín các mối nối và đảm bảo độ dốc thoát nước — Tầng trệt",
+          "acceptance": "Kết nối ống, xử lý kín các mối nối và đảm bảo độ dốc thoát nước. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Thông ống, kéo dây/đánh code đầu cuối theo thiết kế; bố trí line dự phòng khi có yêu cầu — Tầng trệt",
+          "acceptance": "Thông ống, kéo dây/đánh code đầu cuối theo thiết kế; bố trí line dự phòng khi có yêu cầu. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 5,
+          "name": "Kiểm tra điện nước trước khi tô và trước khi đóng trần — Tầng trệt",
+          "acceptance": "Kiểm tra điện nước trước khi tô và trước khi đóng trần. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-16",
+      "order": 16,
+      "name": "Ghém & tô trát tường",
+      "defaultDurationDays": 6,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Dùng laser/dọi đặt mốc ghém, kiểm độ thẳng đứng — Tầng trệt",
+          "acceptance": "Dùng laser/dọi đặt mốc ghém, kiểm độ thẳng đứng. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Đóng lưới chống nứt tại tiếp giáp bê tông — tường xây, góc và lanh tô — Tầng trệt",
+          "acceptance": "Đóng lưới chống nứt tại tiếp giáp bê tông — tường xây, góc và lanh tô. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Tưới ẩm và trát liên tục từng bức tường theo cấp phối được duyệt — Tầng trệt",
+          "acceptance": "Tưới ẩm và trát liên tục từng bức tường theo cấp phối được duyệt. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Xoa mặt, vệ sinh và bảo dưỡng sau trát — Tầng trệt",
+          "acceptance": "Xoa mặt, vệ sinh và bảo dưỡng sau trát. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-17",
+      "order": 17,
+      "name": "Chống thấm WC — ban công — lô gia",
+      "defaultDurationDays": 4,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Vệ sinh, mài và sửa bề mặt; xử lý rỗ/tổ ong, góc, nách và cổ ống — Tầng trệt",
+          "acceptance": "Vệ sinh, mài và sửa bề mặt; xử lý rỗ/tổ ong, góc, nách và cổ ống. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 2,
+          "name": "Gia cường góc/nách; thi công lớp thứ nhất — Tầng trệt",
+          "acceptance": "Gia cường góc/nách; thi công lớp thứ nhất. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 3,
+          "name": "Sau khi lớp 1 khô, thi công lớp thứ hai vuông góc — Tầng trệt",
+          "acceptance": "Sau khi lớp 1 khô, thi công lớp thứ hai vuông góc. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 4,
+          "name": "Ngâm thử nước 72 giờ; xử lý nếu phát hiện rò thấm — Tầng trệt",
+          "acceptance": "Ngâm thử nước 72 giờ; xử lý nếu phát hiện rò thấm. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": true,
+          "floorLabel": "Tầng trệt"
+        },
+        {
+          "order": 5,
+          "name": "Cán lớp bảo vệ chống thấm — Tầng trệt",
+          "acceptance": "Cán lớp bảo vệ chống thấm. Nhà nhiều tầng: bấm + để thêm tầng 1, 2, 3...",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false,
+          "floorLabel": "Tầng trệt"
+        }
+      ]
+    },
+    {
+      "code": "B-18",
+      "order": 18,
+      "name": "Ốp gạch tường",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Truyền cote và bật mực định vị theo soft drawing",
+          "acceptance": "Truyền cote và bật mực định vị theo soft drawing",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Xác định viên mốc/start point và triển khai ốp từ dưới lên",
+          "acceptance": "Xác định viên mốc/start point và triển khai ốp từ dưới lên",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Ốp đến cao độ thiết kế",
+          "acceptance": "Ốp đến cao độ thiết kế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Vệ sinh và chà ron/mạch loại bỏ ke nêm sau khi vật liệu đủ thời gian",
+          "acceptance": "Vệ sinh và chà ron/mạch loại bỏ ke nêm sau khi vật liệu đủ thời gian",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-19",
+      "order": 19,
+      "name": "Cán nền",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Vệ sinh, tưới ẩm và khôi phục mốc cote +1.000 mm",
+          "acceptance": "Vệ sinh, tưới ẩm và khôi phục mốc cote +1.000 mm",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Gắn mốc ghém hoặc dây vữa theo cao độ/độ dốc thiết kế",
+          "acceptance": "Gắn mốc ghém hoặc dây vữa theo cao độ/độ dốc thiết kế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Tưới hồ dầu tạo liên kết",
+          "acceptance": "Tưới hồ dầu tạo liên kết",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Cán vữa, gạt bằng thước nhôm và hoàn thiện bề mặt phù hợp loại sàn",
+          "acceptance": "Cán vữa, gạt bằng thước nhôm và hoàn thiện bề mặt phù hợp loại sàn",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Che chắn và bảo dưỡng sau cán",
+          "acceptance": "Che chắn và bảo dưỡng sau cán",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-20",
+      "order": 20,
+      "name": "Lát gạch nền & thi công đá",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Định vị hai trục vuông góc và start point",
+          "acceptance": "Định vị hai trục vuông góc và start point",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lát theo dây chuẩn; dùng ke chữ thập theo kích thước mạch thiết kế",
+          "acceptance": "Lát theo dây chuẩn; dùng ke chữ thập theo kích thước mạch thiết kế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Dàn đều hồ dầu/keo dán; thường xuyên kiểm bằng nivo/thước nhôm",
+          "acceptance": "Dàn đều hồ dầu/keo dán; thường xuyên kiểm bằng nivo/thước nhôm",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Vệ sinh, chà ron sau đủ thời gian",
+          "acceptance": "Vệ sinh, chà ron sau đủ thời gian",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Che phủ bảo vệ bề mặt hoàn thiện; thi công đá tại tam cấp, cầu thang, ngạch cửa, bàn bếp theo bản vẽ",
+          "acceptance": "Che phủ bảo vệ bề mặt hoàn thiện; thi công đá tại tam cấp, cầu thang, ngạch cửa, bàn bếp theo bản vẽ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-21",
+      "order": 21,
+      "name": "Trần thạch cao",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Định vị cao độ V viền tường từ cote chuẩn",
+          "acceptance": "Định vị cao độ V viền tường từ cote chuẩn",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Cố định V viền; định vị ty treo bằng laser",
+          "acceptance": "Cố định V viền; định vị ty treo bằng laser",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Lắp ty treo, thanh chính và thanh phụ đúng khoảng cách thiết kế",
+          "acceptance": "Lắp ty treo, thanh chính và thanh phụ đúng khoảng cách thiết kế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Gia cường các vị trí nẹp, hộc, miệng gió và lỗ mở",
+          "acceptance": "Gia cường các vị trí nẹp, hộc, miệng gió và lỗ mở",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Lắp mặt dựng, cân chỉnh toàn bộ khung, kiểm cao độ",
+          "acceptance": "Lắp mặt dựng, cân chỉnh toàn bộ khung, kiểm cao độ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Xác nhận MEP trên trần đã hoàn tất và bàn giao",
+          "acceptance": "Xác nhận MEP trên trần đã hoàn tất và bàn giao",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 7,
+          "name": "Lắp tấm so le mối nối, bắn vít đúng khoảng cách",
+          "acceptance": "Lắp tấm so le mối nối, bắn vít đúng khoảng cách",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 8,
+          "name": "Lắp shadow-line nếu có; xử lý mối nối, đầu vít và hoàn thiện",
+          "acceptance": "Lắp shadow-line nếu có; xử lý mối nối, đầu vít và hoàn thiện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-22",
+      "order": 22,
+      "name": "Bả mastic & sơn lót",
+      "defaultDurationDays": 6,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Nghiệm thu tường",
+          "acceptance": "Nghiệm thu tường",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Đo độ ẩm bề mặt trước bả",
+          "acceptance": "Đo độ ẩm bề mặt trước bả",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Pha bột và bả lớp 1, chờ khô, bả lớp 2",
+          "acceptance": "Pha bột và bả lớp 1, chờ khô, bả lớp 2",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Sau khi khô đủ thời gian, xả nhám và vệ sinh bụi",
+          "acceptance": "Sau khi khô đủ thời gian, xả nhám và vệ sinh bụi",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Thi công sơn lót",
+          "acceptance": "Thi công sơn lót",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-23",
+      "order": 23,
+      "name": "Cửa — vách — lan can — khung sắt",
+      "defaultDurationDays": 10,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Tiếp nhận bản vẽ và xác định vật liệu/phụ kiện",
+          "acceptance": "Tiếp nhận bản vẽ và xác định vật liệu/phụ kiện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Đo kích thước thực tế và phát hành shop drawing sản xuất",
+          "acceptance": "Đo kích thước thực tế và phát hành shop drawing sản xuất",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Gia công tại xưởng và kiểm tra trước khi vận chuyển",
+          "acceptance": "Gia công tại xưởng và kiểm tra trước khi vận chuyển",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Lắp đặt khung, kính, phụ kiện và silicon tại công trình",
+          "acceptance": "Lắp đặt khung, kính, phụ kiện và silicon tại công trình",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Lắp vách kính, lan can và khung sắt theo bản vẽ; sơn chống gỉ/hoàn thiện nếu áp dụng",
+          "acceptance": "Lắp vách kính, lan can và khung sắt theo bản vẽ; sơn chống gỉ/hoàn thiện nếu áp dụng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Vệ sinh, kiểm vận hành và bàn giao chìa khóa/phụ kiện",
+          "acceptance": "Vệ sinh, kiểm vận hành và bàn giao chìa khóa/phụ kiện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-24",
+      "order": 24,
+      "name": "Sơn hoàn thiện lớp 1",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Kiểm mã màu và tình trạng bề mặt/sơn lót",
+          "acceptance": "Kiểm mã màu và tình trạng bề mặt/sơn lót",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Pha sơn theo chỉ dẫn; duy trì tỷ lệ pha thống nhất giữa các thùng",
+          "acceptance": "Pha sơn theo chỉ dẫn; duy trì tỷ lệ pha thống nhất giữa các thùng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Chọn dụng cụ phù hợp và lăn/phun lớp phủ thứ nhất đồng đều",
+          "acceptance": "Chọn dụng cụ phù hợp và lăn/phun lớp phủ thứ nhất đồng đều",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Chờ khô đủ thời gian trước các công việc tiếp theo",
+          "acceptance": "Chờ khô đủ thời gian trước các công việc tiếp theo",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-25",
+      "order": 25,
+      "name": "Điều hòa không khí",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Định vị máy, tuyến ống gió/gas và nguồn điện theo thiết kế",
+          "acceptance": "Định vị máy, tuyến ống gió/gas và nguồn điện theo thiết kế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lắp ống nước ngưng có độ dốc và thử kín",
+          "acceptance": "Lắp ống nước ngưng có độ dốc và thử kín",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": true
+        },
+        {
+          "order": 3,
+          "name": "Lắp ống gió, miệng gió và kiểm kín/bảo ôn",
+          "acceptance": "Lắp ống gió, miệng gió và kiểm kín/bảo ôn",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Lắp ống gas, phụ kiện, dàn nóng/dàn lạnh và chống rung",
+          "acceptance": "Lắp ống gas, phụ kiện, dàn nóng/dàn lạnh và chống rung",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Đấu nguồn điện/điều khiển và kiểm thông số",
+          "acceptance": "Đấu nguồn điện/điều khiển và kiểm thông số",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Vận hành thử tải, cân chỉnh và hướng dẫn sử dụng",
+          "acceptance": "Vận hành thử tải, cân chỉnh và hướng dẫn sử dụng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": true
+        }
+      ]
+    },
+    {
+      "code": "B-26",
+      "order": 26,
+      "name": "Hoàn thiện điện nước",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Lắp tủ điện, CB và đấu nối nguồn",
+          "acceptance": "Lắp tủ điện, CB và đấu nối nguồn",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lắp ổ cắm, công tắc, đèn/LED và thiết bị điện",
+          "acceptance": "Lắp ổ cắm, công tắc, đèn/LED và thiết bị điện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Lắp thiết bị vệ sinh, vòi và phụ kiện nước",
+          "acceptance": "Lắp thiết bị vệ sinh, vòi và phụ kiện nước",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Kiểm vận hành, bố trí và thẩm mỹ hệ điện",
+          "acceptance": "Kiểm vận hành, bố trí và thẩm mỹ hệ điện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Kiểm vận hành, rò rỉ và thẩm mỹ hệ nước",
+          "acceptance": "Kiểm vận hành, rò rỉ và thẩm mỹ hệ nước",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-27",
+      "order": 27,
+      "name": "Nội thất & thiết bị bếp",
+      "defaultDurationDays": 7,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Đối chiếu vị trí marking plan và kích thước hoàn thiện thực tế",
+          "acceptance": "Đối chiếu vị trí marking plan và kích thước hoàn thiện thực tế",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Lắp nội thất liền tường và nội thất rời theo shop drawing",
+          "acceptance": "Lắp nội thất liền tường và nội thất rời theo shop drawing",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Lắp thiết bị bếp",
+          "acceptance": "Lắp thiết bị bếp",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Lắp phụ kiện nội thất/bếp",
+          "acceptance": "Lắp phụ kiện nội thất/bếp",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Kiểm hoàn thiện, vận hành và vệ sinh",
+          "acceptance": "Kiểm hoàn thiện, vận hành và vệ sinh",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-28",
+      "order": 28,
+      "name": "Sơn hoàn thiện lớp cuối",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Chỉ bắt đầu sau khi đèn, điện, cửa và nội thất cơ bản đã lắp xong",
+          "acceptance": "Chỉ bắt đầu sau khi đèn, điện, cửa và nội thất cơ bản đã lắp xong",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Sửa các vị trí tường hỏng do vận chuyển/lắp đặt",
+          "acceptance": "Sửa các vị trí tường hỏng do vận chuyển/lắp đặt",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Sơn lớp hoàn thiện cuối trên toàn bộ bề mặt để đồng nhất màu và độ bóng",
+          "acceptance": "Sơn lớp hoàn thiện cuối trên toàn bộ bề mặt để đồng nhất màu và độ bóng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Soi đèn/quan sát xiên để kiểm sóng, vết dặm và khuyết tật",
+          "acceptance": "Soi đèn/quan sát xiên để kiểm sóng, vết dặm và khuyết tật",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-29",
+      "order": 29,
+      "name": "Cây xanh cảnh quan",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Khảo sát hiện trạng, nắng/gió/đất và chốt layout",
+          "acceptance": "Khảo sát hiện trạng, nắng/gió/đất và chốt layout",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Chuẩn bị mặt bằng, xử lý đất và hạng mục khung/phụ trợ",
+          "acceptance": "Chuẩn bị mặt bằng, xử lý đất và hạng mục khung/phụ trợ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Thi công tiểu cảnh, đá/sỏi/thảm cỏ",
+          "acceptance": "Thi công tiểu cảnh, đá/sỏi/thảm cỏ",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Lắp hệ cấp thoát nước và tưới cây",
+          "acceptance": "Lắp hệ cấp thoát nước và tưới cây",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Trồng cây theo chủng loại và khoảng cách",
+          "acceptance": "Trồng cây theo chủng loại và khoảng cách",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 6,
+          "name": "Lắp chiếu sáng cảnh quan",
+          "acceptance": "Lắp chiếu sáng cảnh quan",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 7,
+          "name": "Vệ sinh, kiểm hệ tưới/đèn và bàn giao hướng dẫn chăm sóc",
+          "acceptance": "Vệ sinh, kiểm hệ tưới/đèn và bàn giao hướng dẫn chăm sóc",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-30",
+      "order": 30,
+      "name": "Sửa lỗi tồn đọng và bàn giao",
+      "defaultDurationDays": 5,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Lập danh sách defect theo phòng và hạng mục",
+          "acceptance": "Lập danh sách defect theo phòng và hạng mục",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Gán trách nhiệm cho đơn vị xây dựng, điện nước, cửa, nội thất, sơn hoặc đơn vị liên quan",
+          "acceptance": "Gán trách nhiệm cho đơn vị xây dựng, điện nước, cửa, nội thất, sơn hoặc đơn vị liên quan",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Thực hiện sửa chữa, chụp ảnh trước — sau và cập nhật trạng thái",
+          "acceptance": "Thực hiện sửa chữa, chụp ảnh trước — sau và cập nhật trạng thái",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Kiểm tra lại toàn bộ danh sách trước khi chuyển vệ sinh",
+          "acceptance": "Kiểm tra lại toàn bộ danh sách trước khi chuyển vệ sinh",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    },
+    {
+      "code": "B-31",
+      "order": 31,
+      "name": "Vệ sinh cơ bản",
+      "defaultDurationDays": 3,
+      "scope": "HOAN_THIEN",
+      "steps": [
+        {
+          "order": 1,
+          "name": "Thu dọn vật tư thừa và xà bần",
+          "acceptance": "Thu dọn vật tư thừa và xà bần",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 2,
+          "name": "Tháo bao che, giàn giáo và biển hiệu khi đủ điều kiện",
+          "acceptance": "Tháo bao che, giàn giáo và biển hiệu khi đủ điều kiện",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 3,
+          "name": "Vệ sinh từ trên xuống: trần — tường — cửa kính — thiết bị — sàn",
+          "acceptance": "Vệ sinh từ trên xuống: trần — tường — cửa kính — thiết bị — sàn",
+          "mandatory": true,
+          "minPhotos": 3,
+          "requiresVideo": false
+        },
+        {
+          "order": 4,
+          "name": "Tháo vật liệu bảo vệ nền và decal cửa",
+          "acceptance": "Tháo vật liệu bảo vệ nền và decal cửa",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        },
+        {
+          "order": 5,
+          "name": "Kiểm tra lần cuối trước nghiệm thu tổng",
+          "acceptance": "Kiểm tra lần cuối trước nghiệm thu tổng",
+          "mandatory": true,
+          "minPhotos": 2,
+          "requiresVideo": false
+        }
+      ]
+    }
+  ]
+}
