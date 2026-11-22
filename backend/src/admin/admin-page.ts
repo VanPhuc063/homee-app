@@ -238,7 +238,7 @@ async function renderAds() {
     + '<div class="card"><table><tr><th></th><th>Tiêu đề</th><th>Vị trí</th><th>Thời gian</th><th>Trạng thái</th><th></th></tr>'
     + state.ads.map((x, i) => '<tr><td><img src="' + esc(x.imageUrl) + '" style="height:40px;border-radius:4px" /></td><td>' + esc(x.title) + '</td><td>' + x.placement + '</td>'
       + '<td>' + day(x.startsAt) + ' → ' + day(new Date(+new Date(x.endsAt) - 1).toISOString()) + '</td><td>' + status(x) + '</td>'
-      + '<td><button class="ghost" onclick="state.editAd=state.ads[' + i + '];renderAds();scrollTo(0,0)">Sửa</button> <button class="ghost danger" onclick="delAd('' + x.id + '')">Xoá</button></td></tr>').join('')
+      + '<td><button class="ghost" onclick="state.editAd=state.ads[' + i + '];renderAds();scrollTo(0,0)">Sửa</button> <button class="ghost danger" onclick="delAd(\'' + x.id + '\')">Xoá</button></td></tr>').join('')
     + '</table></div>';
 }
 async function saveAd() {
