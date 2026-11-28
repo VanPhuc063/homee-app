@@ -44,7 +44,7 @@
       "@react-native-community/datetimepicker"
     ],
     "extra": {
-      "apiUrl": "https://api.homee.cristhedev.com",
+      "apiUrl": "https://homee-app-production.up.railway.app",
       "googleClientId": "1067905195807-9eej57ql79h23hg35uka1sf0j4e3hatr.apps.googleusercontent.com",
       "eas": {
         "projectId": "a9f747e8-37a9-406e-b365-086511510eb1"
